@@ -7,7 +7,7 @@
 # @param targets List of the targets for which to print the OS information.
 # @return List of strings formatted as "$target_name: $os"
 plan pe_status_check::statusreport)(TargetSpec $targets) {
-  return run_task('facts', $targets, '_catch_errors' => true).reduce([]) |$info, $r| {
+  return run_task('facts::facts', $targets, '_catch_errors' => true).reduce([]) |$info, $r| {
     if ($r.ok) {
       $info + "${r.target.name}: ${r[pe_status_check]})"
     } else {
