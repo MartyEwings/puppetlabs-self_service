@@ -1,4 +1,4 @@
-plan pe_status_check::status_report(
+plan pe_status_check::statusreport(
   Variant[TargetSpec,String] $target,
   Enum['pe_status_check', 'agent_status_check']] $which_fact                        = 'pe_status_check',
 ) {
