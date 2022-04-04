@@ -9,7 +9,7 @@
 plan pe_status_check::info(TargetSpec $targets) {
   return run_task('facts', $targets, '_catch_errors' => true).reduce([]) |$info, $r| {
     if ($r.ok) {
-      $info + "${r.target.name}: ${r[pe_status_check]} )"
+      "${r.target.name}: ${r[pe_status_check]} "
     } else {
       $info # don't include any info for targets which failed
     }
