@@ -1,19 +1,17 @@
-plan pe_status_check::statusreport(
-  Variant[TargetSpec,String] $target,
-  Enum['pe_status_check', 'agent_status_check']] $which_fact                        = 'pe_status_check',
-) {
-  # Ensuring that the service task executes it's puppet-agent impl so
-  # that we're parsing consistent output.
-  $_target = get_targets($target)
-  $_target.each |TargetSpec $feature_target| {
-    enterprise_tasks::set_feature($feature_target, 'puppet-agent', true)
+# @summary
+#   A plan that prints basic OS information for the specified targets. It first
+#   runs the facts task to retrieve facts from the targets, then compiles the
+#   desired OS information from the os fact value of each targets. This plan primarily
+#   provides readable formatting, and ignores targets that error.
+#
+# @param targets List of the targets for which to print the OS information.
+# @return List of strings formatted as "$target_name: $os"
+plan pe_status_check::statusreport)(TargetSpec $targets) {
+  return run_task('facts', $targets, '_catch_errors' => true).reduce([]) |$info, $r| {
+    if ($r.ok) {
+      $info + "${r.target.name}: ${r[pe_status_check]})"
+    } else {
+      $info # don't include any info for targets which failed
+    }
   }
-
-  $results = run_task('facter_task':facter_task, $_target,
-    fact    => $which_fact,
-  )
-  $status_hash = Hash($results.first().value())
-  out::message("${which_fact} resource service found in state: ${status_hash}")
-
-  return $status_hash,
 }
