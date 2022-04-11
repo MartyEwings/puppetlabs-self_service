@@ -9,7 +9,7 @@ plan pe_status_check::infra_summary(TargetSpec $targets) {
   return $failed_checks.map |$node| {
     # Create a hash where the key is the certname and an array of hashes gives counts for passes and fails and the IDS for failed tests
     {
-      $node.target.name => { 'Passing Tests Count' => count($node['pe_status_check'].filter |$k, $v| { $v }.keys), 'Failed Tests Count ' => count ($node['pe_status_check'].filter |$k, $v| { !$v }.keys) ,'Tests Failed ' => $node['pe_status_check'].filter |$k, $v| { !$v }.keys  , 'test lookup' => lookup('S0001')}
+      $node.target.name => { 'Passing Tests Count' => count($node['pe_status_check'].filter |$k, $v| { $v }.keys), 'Failed Tests Count ' => count ($node['pe_status_check'].filter |$k, $v| { !$v }.keys) ,'Tests Failed ' => $node['pe_status_check'].filter |$k, $v| { !$v }.keys  , 'test lookup' => lookup('pe_status_check::S0001')}
     }
   }
 }
